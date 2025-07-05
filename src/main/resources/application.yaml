@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ringring
+  devtools:
+    restart.enabled: false    # auto restart off
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    # local
+    url: ENC(2+J4J5Ajueeyxvm805PaPpR9phL8keZqhbnZdczsqB0CAmhoGbMtVJD2B7ULhoEPF+EpIYXSXdE=)
+    username: ENC(4Pke5ls4JZL/kkBhpbT0SIXIb8rdj9IP)
+    password: ENC(uNmIkFM053QBuZBVIllMzXA2oNG2w0eI)
+  jpa:
+    hibernate:
+      ddl-auto: none
+  data:
+    redis:
+      # local
+      host: ENC(MCvT0HQ67m4BjwY9LcN0pcjs1xqFTgp9)
+      port: 6379
+      password: ENC(r2uc6/WC014u/faSjNdc6JZE+jNm0VcF)
+
+  servlet:
+    multipart:
+      max-file-size: 5MB      # Maximum size allowed for uploaded files
+      max-request-size: 10MB  # Maximum size allowed for multipart/form-data requests (includes all files + form fields)
+      enabled: true           # Enable multipart uploads (default is true)
+
+jasypt:
+  encryptor:
+    key: ${RINGRING_JASYPT_ENCRYPTOR_KEY}
+
+logging:
+  level:
+    root: error
+    com.sideforge.ringring: debug
