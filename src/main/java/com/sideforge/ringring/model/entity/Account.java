@@ -33,7 +33,7 @@ public class Account {
     private String password;
 
     @Column(nullable = false)
-    private boolean isSocial;
+    private Boolean isSocial;
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
@@ -71,12 +71,16 @@ public class Account {
     private LocalDateTime isLockedAt;
 
     // 제재당한 이력
-    @OneToMany(mappedBy = "bannedAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bannedAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountBanHistory> banHistories = new ArrayList<>();
 
     // 제재를 준 이력 (관리자 입장)
-    @OneToMany(mappedBy = "adminAccount", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "adminAccount", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<AccountBanHistory> banActions = new ArrayList<>();
+
+    // 작성한 게시글 리스트
+    @OneToMany(mappedBy = "authorAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
