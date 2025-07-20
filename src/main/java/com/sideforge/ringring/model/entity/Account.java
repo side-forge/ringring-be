@@ -91,6 +91,16 @@ public class Account {
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
+    // 신고 게시글 알림 등록 리스트
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ReportNotification> reportNotifications = new ArrayList<>();
+
+    // 사용자 신고 게시물 투표 리스트
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ReportVote> reportVotes = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
