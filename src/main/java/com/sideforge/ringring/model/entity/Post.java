@@ -1,11 +1,11 @@
 package com.sideforge.ringring.model.entity;
 
-import com.sideforge.ringring.model.enums.AccountStatusType;
 import com.sideforge.ringring.model.enums.PostType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class Post {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
@@ -43,10 +43,12 @@ public class Post {
 
     // 게시글 내 컨텐츠 리스트
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<PostContent> contents = new ArrayList<>();
 
     // 게시글 내 첨부파일 리스트
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<PostAttachment> attachments = new ArrayList<>();
 
     @PrePersist

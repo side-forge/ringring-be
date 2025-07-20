@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class Account {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
@@ -70,16 +71,24 @@ public class Account {
     @Column(nullable = true)
     private LocalDateTime isLockedAt;
 
+    // 사용자 권한 리스트
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<AccountRoleMapping> accountRoles = new ArrayList<>();
+
     // 제재당한 이력
     @OneToMany(mappedBy = "bannedAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<AccountBanHistory> banHistories = new ArrayList<>();
 
     // 제재를 준 이력 (관리자 입장)
     @OneToMany(mappedBy = "adminAccount", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ToString.Exclude
     private List<AccountBanHistory> banActions = new ArrayList<>();
 
     // 작성한 게시글 리스트
     @OneToMany(mappedBy = "authorAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
     @PrePersist

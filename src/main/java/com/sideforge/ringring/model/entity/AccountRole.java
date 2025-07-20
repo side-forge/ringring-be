@@ -1,13 +1,13 @@
 package com.sideforge.ringring.model.entity;
 
 import com.sideforge.ringring.model.enums.AccountRoleType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class AccountRole {
     @Column(nullable = false, length = 20)
     private String name;
 
-    public static AccountRole from(AccountRoleType type) {
-        return new AccountRole(type.getRoleId(), type.getRoleName());
-    }
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<AccountRoleMapping> accountRoleMappings;
 }

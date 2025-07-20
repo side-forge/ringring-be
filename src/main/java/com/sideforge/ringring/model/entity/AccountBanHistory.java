@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -21,10 +22,12 @@ public class AccountBanHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "banned_id", nullable = false)
+    @ToString.Exclude
     private Account bannedAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = true)
+    @ToString.Exclude
     private Account adminAccount;
 
     @Column(nullable = false)
