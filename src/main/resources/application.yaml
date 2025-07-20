@@ -21,12 +21,19 @@ spring:
       host: ENC(MCvT0HQ67m4BjwY9LcN0pcjs1xqFTgp9)
       port: 6379
       password: ENC(r2uc6/WC014u/faSjNdc6JZE+jNm0VcF)
-
   servlet:
     multipart:
       max-file-size: 5MB      # Maximum size allowed for uploaded files
       max-request-size: 10MB  # Maximum size allowed for multipart/form-data requests (includes all files + form fields)
       enabled: true           # Enable multipart uploads (default is true)
+
+security:
+  jwt:
+    secret-key: ${RINGRING_JWT_SECRET_KEY}
+    access-token-expire: 86400000                   # 개발 편의성을 위해서 Access Token 유효시간을 24시간으로 설정 / 300000
+    refresh-token-expire: 86400000
+  cors:
+    allowed-origins: http://localhost:3000
 
 jasypt:
   encryptor:
