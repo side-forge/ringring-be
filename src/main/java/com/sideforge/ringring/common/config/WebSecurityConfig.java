@@ -1,19 +1,13 @@
 package com.sideforge.ringring.common.config;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -25,29 +19,12 @@ public class WebSecurityConfig {
             "/{url}"
     };
 
+    private final CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(@NonNull HttpServletRequest request) {
-                        CorsConfiguration configuration = new CorsConfiguration();
-                        // 허용할 도메인 리스트
-                        configuration.setAllowedOriginPatterns(Arrays.asList(
-                                "http://localhost:9500",
-                                "http://localhost:9000",
-                                "http://localhost:8000",
-                                "capacitor://*"
-                        ));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-                        return configuration;
-                    }
-                }));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource));
 
         // csrf disable
         http
