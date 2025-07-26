@@ -8,7 +8,6 @@ spring:
     restart.enabled: false    # auto restart off
   datasource:
     driver-class-name: org.postgresql.Driver
-    # local
     url: ENC(2+J4J5Ajueeyxvm805PaPpR9phL8keZqhbnZdczsqB0CAmhoGbMtVJD2B7ULhoEPF+EpIYXSXdE=)
     username: ENC(4Pke5ls4JZL/kkBhpbT0SIXIb8rdj9IP)
     password: ENC(uNmIkFM053QBuZBVIllMzXA2oNG2w0eI)
@@ -17,7 +16,6 @@ spring:
       ddl-auto: none
   data:
     redis:
-      # local
       host: ENC(MCvT0HQ67m4BjwY9LcN0pcjs1xqFTgp9)
       port: 6379
       password: ENC(r2uc6/WC014u/faSjNdc6JZE+jNm0VcF)
@@ -26,6 +24,17 @@ spring:
       max-file-size: 5MB      # Maximum size allowed for uploaded files
       max-request-size: 10MB  # Maximum size allowed for multipart/form-data requests (includes all files + form fields)
       enabled: true           # Enable multipart uploads (default is true)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(SWe+iecUIao1gfeCI5PPL/9RnC/vJGFvg9GFE4V81S+7nGqRKzezAw==)
+    password: ENC(0dn1GMoRT56mP/3Dzwh14YI882Jd767oru7I1wJ/yBs=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+    protocol: smtp
+    default-encoding: UTF-8
 
 security:
   jwt:

@@ -1,5 +1,6 @@
 package com.sideforge.ringring.common.util;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class CodeGenerator {
@@ -20,5 +21,16 @@ public class CodeGenerator {
 
         // UUID에서 필요한 길이만큼 잘라내어 prefixWithHyphen과 결합
         return prefixWithHyphen + uuid.substring(0, remainingLength);
+    }
+
+    // 인증 코드 생성
+    public static String generateNumericCode(int length) {
+        Random random = new Random();
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            result.append(Integer.toString(random.nextInt(10)));
+        }
+
+        return result.toString();
     }
 }
