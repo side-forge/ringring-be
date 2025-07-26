@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-
     private final JwtProperties jwtProperties;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";

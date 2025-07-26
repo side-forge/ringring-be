@@ -6,20 +6,14 @@ import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.Test;
 
 import java.security.Key;
+import java.util.Base64;
 
 public class JwtSecretKeyGeneratorTest {
 
     @Test
     public void generateJwtSecretKey() {
-        // 1. HMAC-SHA256용 비밀 키 생성 (256비트 이상)
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-        // 2. Base64로 인코딩
-        String base64Secret = Encoders.BASE64.encode(key.getEncoded());
-
-        // 3. 출력
-        System.out.println("Generated JWT Secret Key (Base64):");
-        System.out.println(base64Secret);
+        String secureKey = Base64.getEncoder().encodeToString(Keys.secretKeyFor(SignatureAlgorithm.HS512).getEncoded());
+        System.out.println(secureKey);
 
         // 💡 생성된 키는 application.yml 또는 환경 변수에 설정하세요.
     }

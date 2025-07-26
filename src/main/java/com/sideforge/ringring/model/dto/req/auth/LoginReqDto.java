@@ -1,4 +1,4 @@
-package com.sideforge.ringring.model.dto.req.account;
+package com.sideforge.ringring.model.dto.req.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailVerificationReqBodyDto {
-    @NotBlank(message = "Email must not be blank.")
+public class LoginReqDto {
+    @NotBlank(message = "Email is required.")
     @Email(message = "Invalid email format.")
     private String email;
+    @NotBlank(message = "Password is required.")
+    private String password;
 }
