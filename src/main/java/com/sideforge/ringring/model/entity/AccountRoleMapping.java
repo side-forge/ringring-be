@@ -2,12 +2,10 @@ package com.sideforge.ringring.model.entity;
 
 import com.sideforge.ringring.model.entity.id.AccountRoleMappingId;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -28,4 +26,8 @@ public class AccountRoleMapping {
     @JoinColumn(name = "role_id")
     @ToString.Exclude
     private AccountRole role;
+
+    public static AccountRoleMapping of(Account account, AccountRole role) {
+        return new AccountRoleMapping(new AccountRoleMappingId(), account, role);
+    }
 }

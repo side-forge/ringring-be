@@ -3,16 +3,14 @@ package com.sideforge.ringring.model.entity;
 import com.sideforge.ringring.model.enums.AccountStatusType;
 import com.sideforge.ringring.model.enums.SocialProviderType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -111,5 +109,15 @@ public class Account {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void unlock() {
+        this.status = AccountStatusType.ACTIVE;
+        this.isLockedAt = null;
+        this.failedLoginCount = 0;
+    }
+
+    public void unban() {
+        this.status = AccountStatusType.ACTIVE;
     }
 }

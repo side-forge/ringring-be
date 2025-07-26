@@ -47,6 +47,7 @@ CREATE TABLE tb_account_ban_history (
     reason varchar(255) NOT NULL,
     started_at timestamp(6) NOT NULL,
     ends_at timestamp(6) NULL,
+    created_at timestamp(6) NOT NULL,
     CONSTRAINT tb_account_ban_history_pkey PRIMARY KEY (id),
     CONSTRAINT tb_account_ban_history_type_check CHECK (((type)::text = ANY ((ARRAY['CAUTION_BAN'::character varying, 'TEMPORARY_BAN'::character varying, 'PERMANENT_BAN'::character varying])::text[])))
 );

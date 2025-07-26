@@ -2,12 +2,10 @@ package com.sideforge.ringring.model.entity;
 
 import com.sideforge.ringring.model.enums.PostAttachmentType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

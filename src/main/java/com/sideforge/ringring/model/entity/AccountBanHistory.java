@@ -1,15 +1,14 @@
 package com.sideforge.ringring.model.entity;
 
 import com.sideforge.ringring.model.enums.AccountBanType;
+import com.sideforge.ringring.model.enums.AccountStatusType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -42,4 +41,13 @@ public class AccountBanHistory {
 
     @Column(nullable = true)
     private LocalDateTime endsAt;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.startedAt = LocalDateTime.now();
+    }
 }
