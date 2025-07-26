@@ -2,6 +2,7 @@ package com.sideforge.ringring.security.jwt;
 
 import com.sideforge.ringring.common.config.properties.JwtProperties;
 import com.sideforge.ringring.common.exception.dto.InvalidTokenException;
+import com.sideforge.ringring.security.principal.CustomUserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -12,12 +13,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,6 +42,10 @@ public class JwtTokenProvider {
     }
 
     public String generateAccessToken(Authentication authentication) {
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        String userId = principal.getAccountId();
+        String email = principal.getUsername();
+
         String roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -47,10 +54,10 @@ public class JwtTokenProvider {
         Instant now = Instant.now();
         Instant expiry = now.plusMillis(jwtProperties.getAccessTokenExpire());
 
-        // ToDo. sub는 "authentication.getName()" 가 아닌 uuid 와 같은 키로 변경 필요
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(userId)
                 .claim(JwtTokenClaim.ROLE.getName(), roles)
+                .claim(JwtTokenClaim.EMAIL.getName(), email)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))
                 .setIssuer(TOKEN_ISSUER)
@@ -59,13 +66,15 @@ public class JwtTokenProvider {
     }
 
     public String generateRefreshToken(Authentication authentication) {
+        CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+        String userId = principal.getAccountId();
+
         // UTC
         Instant now = Instant.now();
-        Instant expiry = now.plusMillis(jwtProperties.getAccessTokenExpire());
+        Instant expiry = now.plusMillis(jwtProperties.getRefreshTokenExpire());
 
-        // ToDo. sub는 "authentication.getName()" 가 아닌 uuid 와 같은 키로 변경 필요
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(userId)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))
                 .setIssuer(TOKEN_ISSUER)
@@ -122,18 +131,22 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
+        String userId = claims.get(JwtTokenClaim.USER_ID.getName(), String.class);
+        String email = claims.get(JwtTokenClaim.EMAIL.getName(), String.class);
         String roles = claims.get(JwtTokenClaim.ROLE.getName(), String.class);
 
         List<SimpleGrantedAuthority> authorities = Optional.ofNullable(roles)
-                .map(r -> Arrays.stream(r.split(","))
-                        .filter(s -> !s.isEmpty())
+                .map(roleStr -> Arrays.stream(roleStr.split(","))
+                        .map(String::trim)
+                        .filter(role -> !role.isEmpty())
+                        .distinct() // 중복 제거
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                        .toList()
+                )
+                .orElseGet(List::of);
 
-        // ToDo. 커스텀 User 클래스 정의 필요
-        // password는 null 또는 빈 문자열로 처리
-        User principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        CustomUserPrincipal principal = CustomUserPrincipal.from(userId, email, authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 }

@@ -25,7 +25,7 @@ import java.util.List;
 public class Account {
     @Id
     @Column(columnDefinition = "CHAR(32)", nullable = false)
-    private Long id;
+    private String id;
 
     @Column(nullable = true, unique = true, length = 100)
     private String email;

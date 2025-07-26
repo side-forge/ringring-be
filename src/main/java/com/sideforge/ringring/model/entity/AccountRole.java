@@ -1,6 +1,5 @@
 package com.sideforge.ringring.model.entity;
 
-import com.sideforge.ringring.model.enums.AccountRoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum JwtTokenClaim {
     USER_ID("sub"),
+    EMAIL("email"),
     ISSUER("iss"),
     ROLE("roles"),
     ISSUED_AT("iat"),
