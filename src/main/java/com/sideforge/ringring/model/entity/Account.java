@@ -120,4 +120,26 @@ public class Account {
     public void unban() {
         this.status = AccountStatusType.ACTIVE;
     }
+
+    public void resetFailedLoginCount() {
+        this.failedLoginCount = 0;
+    }
+
+    public void updateLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
+
+    public void increaseFailedLoginCount(int maxFailCount) {
+        if (this.status == AccountStatusType.LOCKED) {
+            return;
+        }
+
+        int count = (this.failedLoginCount == null ? 0 : this.failedLoginCount) + 1;
+        this.failedLoginCount = count;
+
+        if (count >= maxFailCount) {
+            this.status = AccountStatusType.LOCKED;
+            this.isLockedAt = LocalDateTime.now();
+        }
+    }
 }

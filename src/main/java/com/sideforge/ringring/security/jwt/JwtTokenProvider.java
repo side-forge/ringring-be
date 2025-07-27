@@ -2,6 +2,7 @@ package com.sideforge.ringring.security.jwt;
 
 import com.sideforge.ringring.common.config.properties.JwtProperties;
 import com.sideforge.ringring.common.exception.dto.InvalidTokenException;
+import com.sideforge.ringring.repository.BlacklistedAccessTokenRepository;
 import com.sideforge.ringring.security.principal.CustomUserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private final JwtProperties jwtProperties;
+    private final BlacklistedAccessTokenRepository blacklistedAccessTokenRepository;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
@@ -91,6 +93,12 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
+            // 블랙리스트에 등재된 토큰 여부 체크
+            if (blacklistedAccessTokenRepository.existsById(token)) {
+                log.warn("Token is blacklisted: {}", token);
+                return false;
+            }
+
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()

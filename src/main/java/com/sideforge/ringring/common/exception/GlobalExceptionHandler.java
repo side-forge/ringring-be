@@ -1,5 +1,6 @@
 package com.sideforge.ringring.common.exception;
 
+import com.sideforge.ringring.common.exception.dto.AccountNotFoundException;
 import com.sideforge.ringring.common.exception.dto.AccountStatusException;
 import com.sideforge.ringring.common.exception.dto.InvalidRequestContentsException;
 import com.sideforge.ringring.common.exception.dto.ResourceLoadException;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -71,11 +71,11 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    /** 잘못된 요청 데이터 발생 */
+    /** 계정 상태가 활성화/비활성화 상태가 아닌데 로그인 시도 시 발생 */
     @ExceptionHandler(AccountStatusException.class)
     public ResponseEntity<ApiCommonResDto<Void>> handleAccountStatusException(AccountStatusException e) {
         ApiResponseCode apiResponseCode = ApiResponseCode.ACCESS_DENIED;
-        log.error("Invalid Request Data. Exception Message: {}",e.getMessage());
+        log.error("Account status invalid for login. Message: {}", e.getMessage());
         return ResponseEntity
                 .status(apiResponseCode.getHttpStatus())
                 .body(ApiCommonResDto.<Void>builder()
@@ -85,22 +85,24 @@ public class GlobalExceptionHandler {
                 );
     }
 
-
-    //    +------------------------------------------------------------------+
-    //    |                        5xx Server Errors                         |
-    //    +------------------------------------------------------------------+
-    /** 로그인 시 이메일 또는 비밀번호가 잘못된 경우 발생 */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiCommonResDto<Void>> handleBadCredentials(BadCredentialsException e) {
+    /** 계정을 찾을 수 없을 때 발생 */
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ApiCommonResDto<Void>> handleAccountNotFoundException(AccountNotFoundException e) {
+        ApiResponseCode apiResponseCode = ApiResponseCode.ACCOUNT_NOT_FOUND;
+        log.error("Account not found or invalid credentials. Message: {}", e.getMessage());
         return ResponseEntity
-                .status(ApiResponseCode.ACCOUNT_NOT_FOUND.getHttpStatus())
+                .status(apiResponseCode.getHttpStatus())
                 .body(ApiCommonResDto.<Void>builder()
-                        .code(ApiResponseCode.ACCOUNT_NOT_FOUND.getCode())
-                        .message(ApiResponseCode.ACCOUNT_NOT_FOUND.getMessage())
+                        .code(apiResponseCode.getCode())
+                        .message(apiResponseCode.getMessage())
                         .build()
                 );
     }
 
+
+    //    +------------------------------------------------------------------+
+    //    |                        5xx Server Errors                         |
+    //    +------------------------------------------------------------------+
     /** 인증 과정에서 일반적인 오류가 발생했을 때 (ex: UserDetailsService 내부 예외) */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiCommonResDto<Void>> handleAuthenticationException(AuthenticationException e) {
