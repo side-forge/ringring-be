@@ -1,7 +1,7 @@
 package com.sideforge.ringring.common.config;
 
-import com.sideforge.ringring.security.filter.JwtAuthenticationFilter;
-import com.sideforge.ringring.security.jwt.JwtTokenProvider;
+import com.sideforge.ringring.domain.auth.security.filter.JwtAuthenticationFilter;
+import com.sideforge.ringring.domain.auth.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
