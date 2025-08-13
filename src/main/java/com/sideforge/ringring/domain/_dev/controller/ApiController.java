@@ -1,12 +1,12 @@
-package com.sideforge.ringring.controller;
+package com.sideforge.ringring.domain._dev.controller;
 
-import com.sideforge.ringring.common.util.CodeGenerator;
 import com.sideforge.ringring.common.model.dto.ApiCommonResDto;
+import com.sideforge.ringring.common.model.enums.ApiResponseCode;
+import com.sideforge.ringring.common.util.CodeGenerator;
 import com.sideforge.ringring.domain.account.model.entity.Account;
 import com.sideforge.ringring.domain.account.model.entity.AccountRole;
 import com.sideforge.ringring.domain.account.model.entity.AccountRoleMapping;
 import com.sideforge.ringring.domain.account.model.enums.AccountRoleType;
-import com.sideforge.ringring.common.model.enums.ApiResponseCode;
 import com.sideforge.ringring.domain.account.repository.AccountRepository;
 import com.sideforge.ringring.domain.account.repository.AccountRoleMappingRepository;
 import com.sideforge.ringring.domain.account.repository.AccountRoleRepository;

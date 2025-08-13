@@ -1,15 +1,14 @@
-package com.sideforge.ringring.domain.board.model.entity;
+package com.sideforge.ringring.domain.post.model.entity;
 
 import com.sideforge.ringring.domain.account.model.converter.AccountRoleTypeConverter;
 import com.sideforge.ringring.domain.account.model.enums.AccountRoleType;
-import com.sideforge.ringring.domain.board.model.enums.BoardType;
+import com.sideforge.ringring.domain.post.model.enums.BoardType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -42,6 +41,11 @@ public class Board {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    // 게시판 내 게시글 리스트
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ToString.Exclude
+    private List<Post> posts = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

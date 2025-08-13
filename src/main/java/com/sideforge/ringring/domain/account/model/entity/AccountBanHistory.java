@@ -19,7 +19,7 @@ public class AccountBanHistory {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "banned_id", nullable = false)
+    @JoinColumn(name = "banned_id", nullable = true)
     @ToString.Exclude
     private Account bannedAccount;
 

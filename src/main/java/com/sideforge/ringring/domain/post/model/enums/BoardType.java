@@ -1,4 +1,4 @@
-package com.sideforge.ringring.domain.board.model.enums;
+package com.sideforge.ringring.domain.post.model.enums;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 // 게시판 타입
 @Getter
 public enum BoardType {
-    REPORT("notice");
+    NOTICE("notice");
 
     private static final Map<String, BoardType> BOARD_TYPE_MAP =
             Collections.unmodifiableMap(Stream.of(values())

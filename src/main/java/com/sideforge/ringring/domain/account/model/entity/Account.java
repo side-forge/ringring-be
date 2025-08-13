@@ -73,12 +73,12 @@ public class Account {
     private LocalDateTime isLockedAt;
 
     // 사용자 권한 리스트
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @ToString.Exclude
     private List<AccountRoleMapping> accountRoles = new ArrayList<>();
 
     // 제재당한 이력
-    @OneToMany(mappedBy = "bannedAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bannedAccount", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<AccountBanHistory> banHistories = new ArrayList<>();
 
@@ -88,7 +88,7 @@ public class Account {
     private List<AccountBanHistory> banActions = new ArrayList<>();
 
     // 작성한 게시글 리스트
-    @OneToMany(mappedBy = "authorAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "authorAccount", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
