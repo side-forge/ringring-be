@@ -3,13 +3,12 @@ package com.sideforge.ringring.domain.attachment.model.entity;
 import com.sideforge.ringring.domain.attachment.model.converter.AttachmentMimeTypeConverter;
 import com.sideforge.ringring.domain.attachment.model.enums.AttachmentMimeType;
 import com.sideforge.ringring.domain.attachment.model.enums.AttachmentType;
+import com.sideforge.ringring.domain.post.model.entity.PostAttachmentMapping;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -38,6 +37,10 @@ public class Attachment {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "attachment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<PostAttachmentMapping> postAttachmentMappings;
 
     @PrePersist
     protected void onCreate() {

@@ -1,12 +1,10 @@
 package com.sideforge.ringring.domain.post.model.entity;
 
 import com.sideforge.ringring.domain.account.model.entity.Account;
+import com.sideforge.ringring.domain.account.model.entity.AccountRoleMapping;
 import com.sideforge.ringring.domain.post.model.enums.PostType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,6 +57,10 @@ public class Post {
 
     @Column(nullable = false)
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<PostAttachmentMapping> postAttachmentMappings;
 
     /** 최초 컨텐츠 생성 (생성 트랜잭션에서 반드시 호출) */
     public PostContent initializeFirstVersion(String contentText) {
