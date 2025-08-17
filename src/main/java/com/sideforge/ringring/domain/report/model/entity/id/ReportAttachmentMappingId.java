@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Embeddable
-public class ReportPostMappingId implements Serializable {
+public class ReportAttachmentMappingId implements Serializable {
     private Long reportId;
-    private Long postId;
+    private String attachmentId;
 }

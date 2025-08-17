@@ -1,4 +1,4 @@
-package com.sideforge.ringring.domain.mail.model.enums;
+package com.sideforge.ringring.domain.account.model.enums;
 
 import com.sideforge.ringring.common.exception.dto.ResourceLoadException;
 import lombok.Getter;

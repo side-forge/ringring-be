@@ -1,13 +1,14 @@
 package com.sideforge.ringring.domain.report.model.entity;
 
+import com.sideforge.ringring.domain.account.model.entity.Account;
+import com.sideforge.ringring.domain.report.model.enums.ReportReviewViaType;
 import com.sideforge.ringring.domain.report.model.enums.ReportStatusType;
 import com.sideforge.ringring.domain.report.model.enums.ReportType;
-import com.sideforge.ringring.domain.notification.model.entity.ReportNotification;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -39,23 +40,44 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private ReportStatusType status;
 
-    // 신고 상태 이력
-    @OneToMany(mappedBy = "report", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reported_by", nullable = false)
     @ToString.Exclude
-    private List<ReportStatusHistory> reportStatusHistories = new ArrayList<>();
+    private Account reportedBy;
 
-    // 신고 알림 리스트
-    @OneToMany(mappedBy = "report", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<ReportNotification> reportNotifications = new ArrayList<>();
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReportReviewViaType reviewVia;
 
-    // 신고 투표 리스트
-    @OneToMany(mappedBy = "report", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by", nullable = true)
     @ToString.Exclude
-    private List<ReportVote> reportVotes = new ArrayList<>();
+    private Account reviewedBy;
+
+    @Column(precision = 5, scale = 2, nullable = false)
+    private BigDecimal weight;
+
+    @Column(nullable = false)
+    private Integer viewCount;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
         this.status = ReportStatusType.PENDING;
+        this.viewCount = 0;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.weight = BigDecimal.ZERO;
+        this.reviewVia = ReportReviewViaType.PENDING;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

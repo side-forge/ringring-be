@@ -1,7 +1,7 @@
-package com.sideforge.ringring.domain.mail.service;
+package com.sideforge.ringring.domain.account.service;
 
 import com.sideforge.ringring.common.config.properties.MailProperties;
-import com.sideforge.ringring.domain.mail.model.enums.EmailTemplateType;
+import com.sideforge.ringring.domain.account.model.enums.EmailTemplateType;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.sideforge.ringring.domain.report.model.entity;
 
 import com.sideforge.ringring.domain.account.model.entity.Account;
-import com.sideforge.ringring.domain.report.model.enums.ReportVoteType;
+import com.sideforge.ringring.domain.report.model.enums.ReportType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,9 +28,12 @@ public class ReportVote {
     @ToString.Exclude
     private Report report;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    private ReportVoteType type;
+    private ReportType spamType;
+
+    @Column(nullable = false)
+    private Boolean isSpam;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

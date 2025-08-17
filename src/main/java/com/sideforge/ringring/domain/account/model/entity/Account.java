@@ -1,10 +1,11 @@
 package com.sideforge.ringring.domain.account.model.entity;
 
-import com.sideforge.ringring.domain.post.model.entity.Post;
-import com.sideforge.ringring.domain.notification.model.entity.ReportNotification;
-import com.sideforge.ringring.domain.report.model.entity.ReportVote;
 import com.sideforge.ringring.domain.account.model.enums.AccountStatusType;
 import com.sideforge.ringring.domain.account.model.enums.SocialProviderType;
+import com.sideforge.ringring.domain.post.model.entity.Post;
+import com.sideforge.ringring.domain.report.model.entity.Report;
+import com.sideforge.ringring.domain.report.model.entity.ReportNotification;
+import com.sideforge.ringring.domain.report.model.entity.ReportVote;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -92,13 +93,18 @@ public class Account {
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
+    // 신고 목록
+    @OneToMany(mappedBy = "reportedBy", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ToString.Exclude
+    private List<Report> reports = new ArrayList<>();
+
     // 신고 게시글 알림 등록 리스트
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<ReportNotification> reportNotifications = new ArrayList<>();
 
     // 사용자 신고 게시물 투표 리스트
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @ToString.Exclude
     private List<ReportVote> reportVotes = new ArrayList<>();
 

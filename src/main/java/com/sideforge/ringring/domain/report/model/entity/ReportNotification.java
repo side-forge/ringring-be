@@ -1,7 +1,6 @@
-package com.sideforge.ringring.domain.notification.model.entity;
+package com.sideforge.ringring.domain.report.model.entity;
 
 import com.sideforge.ringring.domain.account.model.entity.Account;
-import com.sideforge.ringring.domain.report.model.entity.Report;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,11 +27,19 @@ public class ReportNotification {
     @ToString.Exclude
     private Report report;
 
+    @Column(nullable = false)
+    private Boolean spamDetected;
+
+    @Column(nullable = false)
+    private Boolean notSpamDetected;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.spamDetected = true;
+        this.notSpamDetected = true;
     }
 }
