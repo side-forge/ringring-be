@@ -62,7 +62,7 @@ ON CONFLICT (group_code, code) DO NOTHING;
 INSERT INTO tb_common_code (group_code, code, code_name, description, sort_order, is_active, created_at, updated_at)
 VALUES
 ('ATTACHMENT_USAGE_TYPE', 'FILE', '첨부파일', '', 10, TRUE, now(), now()),
-('ATTACHMENT_USAGE_TYPE', 'INLINE', '본문 삽입', '', 20, TRUE, now(), now()),
+('ATTACHMENT_USAGE_TYPE', 'CONTENT', '본문 삽입', '', 20, TRUE, now(), now()),
 ('ATTACHMENT_USAGE_TYPE', 'THUMBNAIL', '썸네일',   '', 30, TRUE, now(), now())
 ON CONFLICT (group_code, code) DO NOTHING;
 
