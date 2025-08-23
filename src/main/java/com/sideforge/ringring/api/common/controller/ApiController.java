@@ -2,6 +2,7 @@ package com.sideforge.ringring.api.common.controller;
 
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
 import com.sideforge.ringring.api.common.model.enums.ApiResponseCode;
+import com.sideforge.ringring.api.common.service.ResponseService;
 import com.sideforge.ringring.util.CodeGenerator;
 import com.sideforge.ringring.api.domain.account.model.entity.Account;
 import com.sideforge.ringring.api.domain.account.model.entity.AccountRole;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ApiController {
 
+    private final ResponseService responseService;
     private final AccountRepository accountRepository;
     private final AccountRoleRepository accountRoleRepository;
     private final AccountRoleMappingRepository accountRoleMappingRepository;
@@ -35,7 +37,7 @@ public class ApiController {
     /** 테스트 계정 생성 */
     @Transactional
     @PostMapping("/users/signup")
-    public ResponseEntity<ApiCommonResDto<?>> createAccountTest(
+    public ResponseEntity<ApiCommonResDto<Void>> createAccountTest(
             @RequestBody CreateAccountDtoTest reqBodyDto
     ) {
         Account tAccount = Account.builder()
@@ -47,19 +49,11 @@ public class ApiController {
                 .nickname(reqBodyDto.getNickname())
                 .phoneNumber(reqBodyDto.getPhoneNumber())
                 .build();
-
         tAccount = accountRepository.save(tAccount);
         AccountRole tAccountRole = accountRoleRepository.findById(AccountRoleType.ROLE_USER.getRoleId()).get();
-
         accountRoleMappingRepository.save(AccountRoleMapping.of(tAccount, tAccountRole));
 
-        return ResponseEntity
-                .status(ApiResponseCode.SUCCESS.getHttpStatus())
-                .body(ApiCommonResDto.<Void>builder()
-                        .code(ApiResponseCode.SUCCESS.getCode())
-                        .message(ApiResponseCode.SUCCESS.formatMessage())
-                        .build()
-                );
+        return responseService.resSuccess();
     }
 
     @Data

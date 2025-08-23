@@ -1,5 +1,6 @@
 package com.sideforge.ringring.api.domain.auth.controller;
 
+import com.sideforge.ringring.api.common.service.ResponseService;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
 import com.sideforge.ringring.api.domain.auth.model.dto.request.LoginReqDto;
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private final ResponseService responseService;
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -34,13 +36,6 @@ public class AuthController {
             throw new AccountNotFoundException("Invalid email or password");
         }
 
-        return ResponseEntity
-                .status(ApiResponseCode.SUCCESS.getHttpStatus())
-                .body(ApiCommonResDto.<LoginResDto>builder()
-                        .data(result)
-                        .code(ApiResponseCode.SUCCESS.getCode())
-                        .message(ApiResponseCode.SUCCESS.formatMessage())
-                        .build()
-                );
+        return responseService.resSuccess(result);
     }
 }

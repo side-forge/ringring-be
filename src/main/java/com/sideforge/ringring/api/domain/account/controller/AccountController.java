@@ -1,5 +1,6 @@
 package com.sideforge.ringring.api.domain.account.controller;
 
+import com.sideforge.ringring.api.common.service.ResponseService;
 import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerificationReqDto;
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
 import com.sideforge.ringring.api.common.model.enums.ApiResponseCode;
@@ -16,19 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class AccountController {
+    private final ResponseService responseService;
     private final AccountService accountService;
 
     @PostMapping("/verify-email/request")
-    public ResponseEntity<ApiCommonResDto<?>> sendSignupVerificationEmail(
+    public ResponseEntity<ApiCommonResDto<Void>> sendSignupVerificationEmail(
             @Valid @RequestBody EmailVerificationReqDto reqDto
     ) {
         accountService.sendSignupVerificationEmail(reqDto);
-        return ResponseEntity
-                .status(ApiResponseCode.SUCCESS.getHttpStatus())
-                .body(ApiCommonResDto.<Void>builder()
-                        .code(ApiResponseCode.SUCCESS.getCode())
-                        .message(ApiResponseCode.SUCCESS.formatMessage())
-                        .build()
-                );
+        return responseService.resSuccess();
     }
 }
