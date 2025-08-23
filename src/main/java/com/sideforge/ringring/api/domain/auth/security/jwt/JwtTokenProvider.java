@@ -132,13 +132,13 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUserId(String token) {
+    public String getAccountId(String token) {
         return parseClaims(token).getSubject();
     }
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
-        String userId = claims.get(JwtTokenClaim.USER_ID.getName(), String.class);
+        String userId = claims.get(JwtTokenClaim.ACCOUNT_ID.getName(), String.class);
         String email = claims.get(JwtTokenClaim.EMAIL.getName(), String.class);
         String roles = claims.get(JwtTokenClaim.ROLE.getName(), String.class);
 

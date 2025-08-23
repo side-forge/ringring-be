@@ -1,5 +1,7 @@
 package com.sideforge.ringring.api.domain.auth.service;
 
+import com.sideforge.ringring.api.domain.auth.model.entity.BlacklistedAccessToken;
+import com.sideforge.ringring.api.domain.auth.repository.BlacklistedAccessTokenRepository;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
 import com.sideforge.ringring.exception.dto.AccountStatusException;
 import com.sideforge.ringring.api.domain.auth.model.dto.response.LoginResDto;
@@ -31,6 +33,7 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final AccountBanHistoryRepository accountBanHistoryRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final BlacklistedAccessTokenRepository blacklistedAccessTokenRepository;
 
     private static final int LOCK_TIME = 30;
     private static final int MAX_FAILED_COUNT = 5;
@@ -108,5 +111,13 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void logout(String token, String accountId) {
+        refreshTokenRepository.deleteById(accountId);
+        blacklistedAccessTokenRepository.save(BlacklistedAccessToken.builder()
+                .token(token)
+                .build());
     }
 }

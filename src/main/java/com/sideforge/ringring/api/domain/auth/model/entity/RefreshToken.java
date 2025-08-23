@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @Builder
 @AllArgsConstructor
-@RedisHash(value = "blacklisted-access-token", timeToLive = 60*60*24)
+@RedisHash(value = "refresh-token", timeToLive = 60*60*24)
 public class RefreshToken {
     @Id
     private String accountId;

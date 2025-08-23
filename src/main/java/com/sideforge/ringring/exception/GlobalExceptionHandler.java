@@ -3,10 +3,7 @@ package com.sideforge.ringring.exception;
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
 import com.sideforge.ringring.api.common.model.enums.ApiResponseCode;
 import com.sideforge.ringring.api.common.service.ResponseService;
-import com.sideforge.ringring.exception.dto.AccountNotFoundException;
-import com.sideforge.ringring.exception.dto.AccountStatusException;
-import com.sideforge.ringring.exception.dto.InvalidRequestContentsException;
-import com.sideforge.ringring.exception.dto.ResourceLoadException;
+import com.sideforge.ringring.exception.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +66,13 @@ public class GlobalExceptionHandler {
         ApiResponseCode apiResponseCode = ApiResponseCode.ACCOUNT_NOT_FOUND;
         log.error("Account not found or invalid credentials. Message: {}", e.getMessage());
         return responseService.resFailure(apiResponseCode);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ApiCommonResDto<Void>> handleInvalidTokenException(InvalidTokenException e) {
+        ApiResponseCode apiResponseCode = ApiResponseCode.INVALID_TOKEN;
+        log.error("Invalid token: {}", e.getMessage());
+        return responseService.resFailure(apiResponseCode, e.getMessage());
     }
 
 

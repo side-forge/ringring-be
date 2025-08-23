@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,8 +25,8 @@ public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final String[] EXCLUDE_PATHS = {
-            "/**",
-            "/{url}"
+//            "/**",
+            "/api/v1/auth/login"
     };
 
     @Bean
@@ -43,17 +44,14 @@ public class WebSecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(EXCLUDE_PATHS).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(AbstractHttpConfigurer::disable)
-                // 세션 설정, 동시 로그인 세션 1개로 제한하고 기존 세션이 만료되면 '/login?expired=true'로 리다이렉트
-                // ToDo. 리다이렉트 URL은 예시일뿐이며 기능 구현 시 변경이 필요
-                .sessionManagement(session -> session
-                        .maximumSessions(1)
-                        .expiredUrl("/login?expired=true")
-                );
+                .formLogin(AbstractHttpConfigurer::disable);
 
         // JwtAuthenticationFilter 등록
         http.addFilterBefore(
