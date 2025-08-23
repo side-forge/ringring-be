@@ -3,7 +3,9 @@ package com.sideforge.ringring.api.domain.auth.controller;
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
 import com.sideforge.ringring.api.common.service.ResponseService;
 import com.sideforge.ringring.api.domain.auth.model.dto.request.LoginReqDto;
+import com.sideforge.ringring.api.domain.auth.model.dto.request.TokenReissueReqDto;
 import com.sideforge.ringring.api.domain.auth.model.dto.response.LoginResDto;
+import com.sideforge.ringring.api.domain.auth.model.dto.response.TokenReissueResDto;
 import com.sideforge.ringring.api.domain.auth.security.jwt.JwtTokenProvider;
 import com.sideforge.ringring.api.domain.auth.service.AuthService;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
@@ -52,4 +54,13 @@ public class AuthController {
         authService.logout(token, accountId);
         return responseService.resSuccess();
     }
+
+    @PostMapping("/token/reissue")
+    public ResponseEntity<ApiCommonResDto<TokenReissueResDto>> reissue(
+            @Valid @RequestBody TokenReissueReqDto reqDto
+    ) {
+        TokenReissueResDto result = authService.reissue(reqDto.getRefreshToken());
+        return responseService.resSuccess(result);
+    }
+
 }

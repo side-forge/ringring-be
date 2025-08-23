@@ -14,4 +14,8 @@ public class RefreshToken {
     @Id
     private String accountId;
     private String token;
+
+    public void reissue(String newToken) {
+        this.token = newToken;
+    }
 }
