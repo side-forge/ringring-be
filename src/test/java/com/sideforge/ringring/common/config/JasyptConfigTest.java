@@ -15,7 +15,7 @@ class JasyptConfigTest {
 
     @Test
     public void jasypt_test() {
-        String plainText = "원본 텍스트를 입력하세요.";
+        String plainText = "/api/v1/auth/refresh";
 
         StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
         jasypt.setPassword(key);

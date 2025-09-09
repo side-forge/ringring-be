@@ -13,4 +13,12 @@ public class JwtProperties {
     private String secretKey;
     private long accessTokenExpire;
     private long refreshTokenExpire;
+    private CookieConfig cookieConfig;
+
+    @Getter
+    @Setter
+    public static class CookieConfig {
+        private String name;
+        private String path;
+    }
 }
