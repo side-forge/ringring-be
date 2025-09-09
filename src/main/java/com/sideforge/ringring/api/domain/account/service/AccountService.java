@@ -18,6 +18,10 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
 
+    public boolean isEmailDuplicated(String email) {
+        return accountRepository.existsByEmail(email);
+    }
+
     public void sendSignupVerificationEmail(EmailVerificationReqDto reqDto) {
         String verificationCode = CodeGenerator.generateNumericCode(6);
         String recipientEmail = reqDto.getEmail();
