@@ -35,10 +35,10 @@ public class AccountController {
      *  - 인증코드 레디스 저장 및 인증메일 비동기 전송
      */
     @PostMapping("/email-verifications")
-    public ResponseEntity<ApiCommonResDto<Void>> sendEmailVerification(
+    public ResponseEntity<ApiCommonResDto<Void>> emailVerification(
             @Valid @RequestBody EmailVerificationReqDto reqDto
     ) {
-        accountService.sendEmailVerification(reqDto);
+        accountService.sendAuthCodeEmail(reqDto);
         return responseService.resSuccess();
     }
 }

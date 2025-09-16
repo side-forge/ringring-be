@@ -1,4 +1,4 @@
-package com.sideforge.ringring.config;
+package com.sideforge.ringring.config.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sideforge.ringring.api.domain.auth.security.jwt.JwtTokenArgumentResolver;

@@ -68,6 +68,7 @@ public class GlobalExceptionHandler {
         return responseService.resFailure(apiResponseCode);
     }
 
+    /** 잘못된 토큰 사용 시 발생 */
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ApiCommonResDto<Void>> handleInvalidTokenException(InvalidTokenException e) {
         ApiResponseCode apiResponseCode = ApiResponseCode.INVALID_TOKEN;
@@ -75,6 +76,13 @@ public class GlobalExceptionHandler {
         return responseService.resFailure(apiResponseCode, e.getMessage());
     }
 
+    /** 요청 빈도 초과 시 발생 */
+    @ExceptionHandler(TooManyRequestException.class)
+    public ResponseEntity<ApiCommonResDto<Void>> handleTooManyRequestException(TooManyRequestException e) {
+        ApiResponseCode apiResponseCode = ApiResponseCode.TOO_MANY_REQUESTS; // enum 값
+        log.warn("Too many requests: {}", e.getMessage());
+        return responseService.resFailure(apiResponseCode, e.getMessage());
+    }
 
     //    +------------------------------------------------------------------+
     //    |                        5xx Server Errors                         |

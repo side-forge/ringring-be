@@ -42,6 +42,10 @@ public enum ApiResponseCode {
     /** 409 - 중복된 리소스 존재 */
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "4090", "Resource already exists: %s"),
 
+    // 429 - TOO MANY REQUESTS
+    /** 429 - 요청 빈도 초과 */
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "4290", "Too many requests. Try again later."),
+
     // 500 - SERVER ERROR
     /** 500 - 내부 서버 오류 */
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "5000", "Internal server error"),

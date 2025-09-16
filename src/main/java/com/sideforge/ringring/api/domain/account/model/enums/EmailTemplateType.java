@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 // 이메일 템플릿 타입
 @Getter
 public enum EmailTemplateType {
-    SIGNUP_EMAIL_VERIFICATION("\uD83D\uDCEC RingRing 이메일 인증","templates/signup-email-verification.html"),
-    RESET_PASSWORD_VERIFICAION("\uD83D\uDD10 RingRing 비밀번호 재설정", "templates/reset-password-verification.html");
+    AUTH_EMAIL("\uD83D\uDCEC RingRing 이메일 인증","templates/signup-email-verification.html"),
+    RESET_PASSWORD_EMAIL("\uD83D\uDD10 RingRing 비밀번호 재설정", "templates/reset-password-verification.html");
 
     private final String subject;
     private final String path;

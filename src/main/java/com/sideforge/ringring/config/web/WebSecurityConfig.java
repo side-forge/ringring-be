@@ -1,4 +1,4 @@
-package com.sideforge.ringring.config;
+package com.sideforge.ringring.config.web;
 
 import com.sideforge.ringring.api.domain.auth.security.filter.JwtAuthenticationFilter;
 import com.sideforge.ringring.api.domain.auth.security.jwt.JwtTokenProvider;
@@ -26,6 +26,7 @@ public class WebSecurityConfig {
 
     private final String[] EXCLUDE_PATHS = {
 //            "/**",
+            "/api/v1/users/**",
             "/api/v1/dev/**",                   // 개발 테스트용 API
             "/api/v1/auth/login",               // 로그인
             "/api/v1/auth/token/reissue"        // 토큰 재발급
