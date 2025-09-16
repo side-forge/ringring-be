@@ -1,5 +1,8 @@
 package com.sideforge.ringring.api.domain.account.service;
 
+import com.sideforge.ringring.api.domain.account.model.dto.request.UserAvailabilityReqDto;
+import com.sideforge.ringring.api.domain.account.model.dto.response.UserAvailabilityResDto;
+import com.sideforge.ringring.api.domain.account.model.enums.UserIdentifierType;
 import com.sideforge.ringring.util.CodeGenerator;
 import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerificationReqDto;
 import com.sideforge.ringring.api.domain.account.model.entity.EmailVerificationCode;
@@ -9,6 +12,7 @@ import com.sideforge.ringring.api.domain.account.repository.EmailVerificationCod
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,11 +22,8 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final EmailVerificationCodeRepository emailVerificationCodeRepository;
 
-    public boolean isEmailDuplicated(String email) {
-        return accountRepository.existsByEmail(email);
-    }
-
-    public void sendSignupVerificationEmail(EmailVerificationReqDto reqDto) {
+    @Transactional
+    public void sendEmailVerification(EmailVerificationReqDto reqDto) {
         String verificationCode = CodeGenerator.generateNumericCode(6);
         String recipientEmail = reqDto.getEmail();
 
@@ -33,6 +34,26 @@ public class AccountService {
                 .build());
 
         // 이메일 전송
-        mailService.sendEmailAsync(EmailTemplateType.SIGNUP_EMAIL_VERIFICATION, recipientEmail, verificationCode);
+        mailService.sendEmail(EmailTemplateType.SIGNUP_EMAIL_VERIFICATION, recipientEmail, verificationCode);
+    }
+
+    public UserAvailabilityResDto checkIdentifier(UserAvailabilityReqDto reqDto) {
+        UserIdentifierType type = reqDto.getType();
+        String raw = reqDto.getValue();
+        
+        // 유효성 검증
+        if (!type.isValid(raw)) {
+            return new UserAvailabilityResDto(false);
+        }
+
+        String normalized = type.normalize(raw);
+
+        // 중복 검증
+        boolean exists = switch (type) {
+            case EMAIL -> accountRepository.existsByEmail(normalized);
+            case PHONE -> accountRepository.existsByPhoneNumber(normalized);
+        };
+        
+        return new UserAvailabilityResDto(!exists);
     }
 }

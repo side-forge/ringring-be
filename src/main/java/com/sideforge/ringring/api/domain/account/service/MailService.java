@@ -19,7 +19,7 @@ public class MailService {
     private final MailProperties mailProperties;
 
     @Async
-    public void sendEmailAsync(EmailTemplateType emailTemplate, String to, String code) {
+    public void sendEmail(EmailTemplateType emailTemplate, String to, String code) {
         String from = mailProperties.getUsername();
         String subject = emailTemplate.getSubject();
         String template = emailTemplate.loadTemplate();

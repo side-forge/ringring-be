@@ -3,7 +3,8 @@ package com.sideforge.ringring.api.domain.account.controller;
 import com.sideforge.ringring.api.common.model.dto.ApiCommonResDto;
 import com.sideforge.ringring.api.common.service.ResponseService;
 import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerificationReqDto;
-import com.sideforge.ringring.api.domain.account.model.dto.response.EmailDupCheckResDto;
+import com.sideforge.ringring.api.domain.account.model.dto.request.UserAvailabilityReqDto;
+import com.sideforge.ringring.api.domain.account.model.dto.response.UserAvailabilityResDto;
 import com.sideforge.ringring.api.domain.account.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +18,27 @@ public class AccountController {
     private final ResponseService responseService;
     private final AccountService accountService;
 
-    @GetMapping("/check-email")
-    public ResponseEntity<ApiCommonResDto<EmailDupCheckResDto>> checkDuplicateEmail(
-            @RequestParam("email") String email
+    /**
+     * 사용자 식별자(EMAIL/PHONE) 가용성 확인
+     * - PII가 URL/로그에 남지 않도록 POST 사용
+     */
+    @PostMapping("/availability")
+    public ResponseEntity<ApiCommonResDto<UserAvailabilityResDto>> getIdentifierAvailability(
+            @Valid @RequestBody UserAvailabilityReqDto reqDto
     ) {
-        boolean isDuplicate = accountService.isEmailDuplicated(email);
-        EmailDupCheckResDto result = EmailDupCheckResDto.builder()
-                .isDuplicate(isDuplicate)
-                .build();
+        UserAvailabilityResDto result = accountService.checkIdentifier(reqDto);
         return responseService.resSuccess(result);
     }
 
-    @PostMapping("/verify-email/request")
-    public ResponseEntity<ApiCommonResDto<Void>> sendSignupVerificationEmail(
+    /**
+     * 사용자 이메일 인증메일 발송
+     *  - 인증코드 레디스 저장 및 인증메일 비동기 전송
+     */
+    @PostMapping("/email-verifications")
+    public ResponseEntity<ApiCommonResDto<Void>> sendEmailVerification(
             @Valid @RequestBody EmailVerificationReqDto reqDto
     ) {
-        accountService.sendSignupVerificationEmail(reqDto);
+        accountService.sendEmailVerification(reqDto);
         return responseService.resSuccess();
     }
 }

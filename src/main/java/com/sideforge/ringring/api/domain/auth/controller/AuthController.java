@@ -30,6 +30,10 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
 
+    /**
+     * 사용자 로그인
+     * - 계정 상태 검증 및 토큰 발급
+     */
     @PostMapping("/login")
     public ResponseEntity<ApiCommonResDto<LoginResDto>> login(
             @Valid @RequestBody LoginReqDto reqDto
@@ -56,6 +60,10 @@ public class AuthController {
         return responseService.resSuccessWithCookies(result, cookie);
     }
 
+    /**
+     * 사용자 로그아웃
+     * - 토큰 블랙리스트 등록 및 쿠키에서 제거
+     */
     @PostMapping("/logout")
     public ResponseEntity<ApiCommonResDto<Void>> logout(
             HttpServletRequest request
@@ -74,6 +82,10 @@ public class AuthController {
         return responseService.resSuccessWithCookies(cookie);
     }
 
+    /**
+     * 토큰 재발급
+     * - 토큰 RT 및 신규 발급
+     */
     @PostMapping("/token/reissue")
     public ResponseEntity<ApiCommonResDto<TokenReissueResDto>> reissue(
             @CookieValue(name = "#{@jwtProperties.cookieConfig.name}", required = false) String refreshToken

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailDupCheckResDto {
-    private boolean isDuplicate;
+public class UserAvailabilityResDto {
+    private boolean usable;
 }
