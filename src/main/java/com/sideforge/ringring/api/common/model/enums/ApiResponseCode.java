@@ -15,12 +15,14 @@ public enum ApiResponseCode {
     // 400 - BAD REQUEST
     /** 400 - 잘못된 URL */
     INVALID_URL(HttpStatus.BAD_REQUEST, "4000", "Invalid request URL"),
-    /** 400 - 잘못된 파라미터 (header/path/query) */
+    /** 400 - 잘못된 파라미터 */
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "4001", "Invalid request parameter: %s"),
     /** 400 - 잘못된 본문 형식 */
-    INVALID_BODY_TYPE(HttpStatus.BAD_REQUEST, "4002", "Invalid request body type"),
+    INVALID_BODY_TYPE(HttpStatus.BAD_REQUEST, "4002", "Invalid request body type: %s"),
     /** 400 - 잘못된 요청 컨텐츠 */
     INVALID_CONTENTS(HttpStatus.BAD_REQUEST, "4003", "Invalid content: %s"),
+    /** 400 - 잘못된 값 사용 */
+    INVALID_VALUE(HttpStatus.BAD_REQUEST, "4004", "Invalid value: %s"),
 
     // 401 - UNAUTHORIZED
     /** 401 - 토큰 누락 또는 만료 */

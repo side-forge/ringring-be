@@ -1,21 +1,19 @@
 package com.sideforge.ringring.api.domain.account.service;
 
 import com.sideforge.ringring.api.common.model.enums.RedisKey;
+import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerificationReqDto;
 import com.sideforge.ringring.api.domain.account.model.dto.request.UserAvailabilityReqDto;
 import com.sideforge.ringring.api.domain.account.model.dto.response.UserAvailabilityResDto;
 import com.sideforge.ringring.api.domain.account.model.enums.EmailTemplateType;
 import com.sideforge.ringring.api.domain.account.model.enums.UserIdentifierType;
+import com.sideforge.ringring.api.domain.account.repository.AccountRepository;
 import com.sideforge.ringring.api.domain.account.repository.EmailVerificationCodeStore;
 import com.sideforge.ringring.config.properties.CryptoProperties;
 import com.sideforge.ringring.exception.dto.TooManyRequestException;
 import com.sideforge.ringring.util.CodeGenerator;
-import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerificationReqDto;
-import com.sideforge.ringring.api.domain.account.repository.AccountRepository;
-import com.sideforge.ringring.api.domain.account.repository.EmailVerificationCodeRepository;
 import com.sideforge.ringring.util.CryptoUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
+    private final MailService mailService;
     private final CryptoProperties cryptoProperties;
     private final AccountRepository accountRepository;
-    private final StringRedisTemplate redisTemplate;
-    private final EmailVerificationCodeRepository emailVerificationCodeRepository;
-    private final MailService mailService;
     private final EmailVerificationCodeStore emailVerificationCodeStore;
 
     public UserAvailabilityResDto checkIdentifier(UserAvailabilityReqDto reqDto) {

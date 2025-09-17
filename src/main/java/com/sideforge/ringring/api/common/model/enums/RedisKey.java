@@ -38,11 +38,20 @@ public enum RedisKey {
     /**
      * ── Email Verification Lock ─────────────────────────────────────────
      * - key: ringring:auth:code:email:{email}:lock
-     * - TTL: 15분
+     * - TTL: 10분
      * - 용도: 시도 횟수 초과 시 해당 이메일 계정에 대한 인증 요청 잠금
      * - args: email
      */
-    AUTH_CODE_EMAIL_LOCK("ringring:code:email:%s:lock", Duration.ofMinutes(15)),
+    AUTH_CODE_EMAIL_LOCK("ringring:code:email:%s:lock", Duration.ofMinutes(10)),
+
+    /**
+     * ── Email Verification Verified Ticket ────────────────────────────────
+     * - key: ringring:auth:code:email:{email}:verified
+     * - TTL: 10분
+     * - 용도: 사용자가 이메일 인증코드를 성공적으로 검증했음을 나타내는 단발성 티켓
+     * - args: email
+     */
+    AUTH_CODE_EMAIL_VERIFIED("ringring:auth:code:email:%s:verified", Duration.ofMinutes(10)),
 
     /**
      * ── JWT Blacklist ──────────────────────────────────────────────────

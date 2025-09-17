@@ -7,12 +7,10 @@ import com.sideforge.ringring.api.domain.account.repository.AccountBanHistoryRep
 import com.sideforge.ringring.api.domain.account.repository.AccountRepository;
 import com.sideforge.ringring.api.domain.auth.model.dto.response.LoginResDto;
 import com.sideforge.ringring.api.domain.auth.model.dto.response.TokenReissueResDto;
-import com.sideforge.ringring.api.domain.auth.model.entity.BlacklistedAccessToken;
-import com.sideforge.ringring.api.domain.auth.model.entity.RefreshToken;
 import com.sideforge.ringring.api.domain.auth.model.principal.CustomUserPrincipal;
-import com.sideforge.ringring.api.domain.auth.repository.BlacklistedAccessTokenRepository;
-import com.sideforge.ringring.api.domain.auth.repository.RefreshTokenRepository;
+import com.sideforge.ringring.api.domain.auth.repository.TokenStore;
 import com.sideforge.ringring.api.domain.auth.security.jwt.JwtTokenProvider;
+import com.sideforge.ringring.config.properties.JwtProperties;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
 import com.sideforge.ringring.exception.dto.AccountStatusException;
 import com.sideforge.ringring.exception.dto.InvalidTokenException;
@@ -25,18 +23,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final AccountRepository accountRepository;
     private final AccountBanHistoryRepository accountBanHistoryRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final BlacklistedAccessTokenRepository blacklistedAccessTokenRepository;
+    private final TokenStore tokenStore;
 
     private static final int LOCK_TIME = 30;
     private static final int MAX_FAILED_COUNT = 5;
@@ -91,6 +90,8 @@ public class AuthService {
             case WITHDRAWN -> throw new AccountStatusException("Account has been withdrawn.");
             case LOCKED -> handleLockedAccount(account);
             case BANNED -> handleBannedAccount(account);
+            case ACTIVE -> { /* active status no action */ }
+            case INACTIVE -> { /* inactive status no action */ }
         }
 
         // account 인증 요청
@@ -100,10 +101,7 @@ public class AuthService {
         // 토큰 발급 및 저장
         String accessToken = jwtTokenProvider.generateAccessToken(authenticated);
         String refreshToken = jwtTokenProvider.generateRefreshToken(authenticated);
-        refreshTokenRepository.save(RefreshToken.builder()
-                .accountId(account.getId())
-                .token(refreshToken)
-                .build());
+        tokenStore.saveRefresh(account.getId(), refreshToken, Duration.ofMillis(jwtProperties.getRefreshTokenExpire()));
 
         // 로그인 성공 → 실패 카운트 초기화
         account.resetFailedLoginCount();
@@ -117,22 +115,30 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String token, String accountId) {
-        refreshTokenRepository.deleteById(accountId);
-        blacklistedAccessTokenRepository.save(BlacklistedAccessToken.builder()
-                .token(token)
-                .build());
+    public void logout(String accessToken, String accountId) {
+        // accessToken 만료시간 만큼 블랙리스트 등록
+        String jti = jwtTokenProvider.getJti(accessToken);
+        Duration ttl = jwtTokenProvider.getRemainingTtl(accessToken);
+        if (jti != null && ttl != null && ttl.isPositive()) {
+            tokenStore.saveBlacklist(jti, ttl);
+        }
+
+        // 계정의 RT 삭제
+        tokenStore.deleteRefresh(accountId);
     }
 
     @Transactional
     public TokenReissueResDto reissue(String refreshToken) {
         String accountId = jwtTokenProvider.getAccountId(refreshToken);
-        RefreshToken saved = refreshTokenRepository.findById(accountId)
-                .orElseThrow(() -> new InvalidTokenException("Refresh token not found."));
+        String saved = tokenStore.getRefresh(accountId);
+
+        if (saved == null) {
+            throw new InvalidTokenException("Refresh token not found.");
+        }
 
         // 저장된 토큰과 일치하지 않을 경우 폐기 (토큰 유출 방지)
-        if (!saved.getToken().equals(refreshToken)) {
-            refreshTokenRepository.deleteById(accountId);
+        if (!saved.equals(refreshToken)) {
+            tokenStore.deleteRefresh(accountId);
             throw new InvalidTokenException("Refresh token reuse detected.");
         }
 
@@ -145,13 +151,7 @@ public class AuthService {
         // 토큰 발급 및 저장
         String newAccessToken = jwtTokenProvider.generateAccessToken(authenticated);
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(authenticated);
-        refreshTokenRepository.save(RefreshToken.builder()
-                .accountId(account.getId())
-                .token(refreshToken)
-                .build());
-
-        saved.reissue(newRefreshToken);
-        refreshTokenRepository.save(saved);
+        tokenStore.saveRefresh(account.getId(), refreshToken, Duration.ofMillis(jwtProperties.getRefreshTokenExpire()));
 
         return TokenReissueResDto.builder()
                 .accessToken(newAccessToken)

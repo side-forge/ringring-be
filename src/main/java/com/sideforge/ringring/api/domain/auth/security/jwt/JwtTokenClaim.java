@@ -11,7 +11,8 @@ public enum JwtTokenClaim {
     ISSUER("iss"),
     ROLE("roles"),
     ISSUED_AT("iat"),
-    EXPIRATION("exp");
+    EXPIRATION("exp"),
+    JTI("jti");
 
     private final String name;
 }

@@ -1,10 +1,13 @@
 package com.sideforge.ringring.api.domain.account.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.sideforge.ringring.exception.dto.InvalidValueException;
 import lombok.Getter;
 
 @Getter
 public enum UserIdentifierType {
-    EMAIL {
+    EMAIL("email") {
         @Override
         public boolean isValid(String raw) {
             if (raw == null) return false;
@@ -31,7 +34,7 @@ public enum UserIdentifierType {
         }
     },
 
-    PHONE {
+    PHONE("phone") {
         @Override
         public boolean isValid(String raw) {
             if (raw == null) return false;
@@ -60,6 +63,26 @@ public enum UserIdentifierType {
             return "********" + digits.substring(digits.length() - 4);
         }
     };
+
+    private final String code;
+
+    UserIdentifierType(String code) {
+        this.code = code;
+    }
+
+    @JsonValue
+    public String getCode() { return code; }
+
+    @JsonCreator
+    public static UserIdentifierType from(String value) {
+        if (value == null) return null;
+        for (UserIdentifierType type : values()) {
+            if (type.code.equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new InvalidValueException("Invalid UserIdentifierType: " + value);
+    }
 
     // 입력값이 형식적으로 올바른지 검증
     public abstract boolean isValid(String raw);

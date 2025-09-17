@@ -9,6 +9,7 @@ import com.sideforge.ringring.api.domain.auth.security.jwt.JwtTokenProvider;
 import com.sideforge.ringring.api.domain.auth.service.AuthService;
 import com.sideforge.ringring.config.properties.JwtProperties;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
+import com.sideforge.ringring.exception.dto.InvalidTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -68,9 +69,9 @@ public class AuthController {
     public ResponseEntity<ApiCommonResDto<Void>> logout(
             HttpServletRequest request
     ) {
-        String token = jwtTokenProvider.resolveToken(request);
-        String accountId = jwtTokenProvider.getAccountId(token);
-        authService.logout(token, accountId);
+        String accessToken = jwtTokenProvider.resolveToken(request);
+        String accountId = jwtTokenProvider.getAccountId(accessToken);
+        authService.logout(accessToken, accountId);
         ResponseCookie cookie = ResponseCookie.from(jwtProperties.getCookieConfig().getName(), "")
                 .httpOnly(true)
                 .secure(true)
@@ -91,7 +92,7 @@ public class AuthController {
             @CookieValue(name = "#{@jwtProperties.cookieConfig.name}", required = false) String refreshToken
     ) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new AccountNotFoundException("Refresh token missing");
+            throw new InvalidTokenException("Refresh token missing");
         }
         TokenReissueResDto result = authService.reissue(refreshToken);
         ResponseCookie cookie = ResponseCookie.from(jwtProperties.getCookieConfig().getName(), result.getRefreshToken())

@@ -52,6 +52,13 @@ public class GlobalExceptionHandler {
         return responseService.resFailure(apiResponseCode, apiResponseCode.formatMessage(e.getMessage()));
     }
 
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<ApiCommonResDto<Void>> handleInvalidValueException(InvalidValueException e) {
+        ApiResponseCode apiResponseCode = ApiResponseCode.INVALID_VALUE;
+        log.error("Invalid Value. Exception Message: {}",e.getMessage());
+        return responseService.resFailure(apiResponseCode, apiResponseCode.formatMessage(e.getMessage()));
+    }
+
     /** 계정 상태가 활성화/비활성화 상태가 아닌데 로그인 시도 시 발생 */
     @ExceptionHandler(AccountStatusException.class)
     public ResponseEntity<ApiCommonResDto<Void>> handleAccountStatusException(AccountStatusException e) {
