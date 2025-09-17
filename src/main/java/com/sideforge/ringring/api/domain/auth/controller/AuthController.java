@@ -10,6 +10,7 @@ import com.sideforge.ringring.api.domain.auth.service.AuthService;
 import com.sideforge.ringring.config.properties.JwtProperties;
 import com.sideforge.ringring.exception.dto.AccountNotFoundException;
 import com.sideforge.ringring.exception.dto.InvalidTokenException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class AuthController {
      * - 계정 상태 검증 및 토큰 발급
      */
     @PostMapping("/login")
+    @Operation(summary = "로그인")
     public ResponseEntity<ApiCommonResDto<LoginResDto>> login(
             @Valid @RequestBody LoginReqDto reqDto
     ) {
@@ -66,6 +68,7 @@ public class AuthController {
      * - 토큰 블랙리스트 등록 및 쿠키에서 제거
      */
     @PostMapping("/logout")
+    @Operation(summary = "로그아웃")
     public ResponseEntity<ApiCommonResDto<Void>> logout(
             HttpServletRequest request
     ) {
@@ -88,6 +91,7 @@ public class AuthController {
      * - 토큰 RT 및 신규 발급
      */
     @PostMapping("/token/reissue")
+    @Operation(summary = "토큰 재발급")
     public ResponseEntity<ApiCommonResDto<TokenReissueResDto>> reissue(
             @CookieValue(name = "#{@jwtProperties.cookieConfig.name}", required = false) String refreshToken
     ) {

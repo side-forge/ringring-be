@@ -1,4 +1,4 @@
-package com.sideforge.ringring.config;
+package com.sideforge.ringring.config.util;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

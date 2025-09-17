@@ -9,7 +9,7 @@ import java.time.Duration;
 
 @Repository
 @RequiredArgsConstructor
-public class EmailVerificationCodeStore {
+public class AuthCodeStore {
     private final StringRedisTemplate redisTemplate;
 
     public void saveCode(String dataKey, String attemptsKey, String hash, Duration ttl) {

@@ -5,7 +5,8 @@ spring:
   application:
     name: ringring
   devtools:
-    restart.enabled: false    # auto restart off
+    restart:
+      enabled: false        # auto restart off
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ENC(2+J4J5Ajueeyxvm805PaPpR9phL8keZqhbnZdczsqB0CAmhoGbMtVJD2B7ULhoEPF+EpIYXSXdE=)
@@ -36,6 +37,13 @@ spring:
     protocol: smtp
     default-encoding: UTF-8
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    persist-authorization: true
+
 security:
   crypto:
     secret-key: ${RINGRING_CRYPTO_SECRET_KEY}
@@ -46,8 +54,6 @@ security:
     cookie-config:
       name: refresh_token
       path: /api/v1/auth/token/reissue
-  cors:
-    allowed-origins: http://localhost:3000
 
 jasypt:
   encryptor:

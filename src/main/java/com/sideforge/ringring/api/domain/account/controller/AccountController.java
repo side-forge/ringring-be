@@ -6,10 +6,15 @@ import com.sideforge.ringring.api.domain.account.model.dto.request.EmailVerifica
 import com.sideforge.ringring.api.domain.account.model.dto.request.UserAvailabilityReqDto;
 import com.sideforge.ringring.api.domain.account.model.dto.response.UserAvailabilityResDto;
 import com.sideforge.ringring.api.domain.account.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -23,6 +28,7 @@ public class AccountController {
      * - PII가 URL/로그에 남지 않도록 POST 사용
      */
     @PostMapping("/availability")
+    @Operation(summary = "사용자 식별자 가용성 체크")
     public ResponseEntity<ApiCommonResDto<UserAvailabilityResDto>> getIdentifierAvailability(
             @Valid @RequestBody UserAvailabilityReqDto reqDto
     ) {
@@ -35,6 +41,7 @@ public class AccountController {
      *  - 인증코드 레디스 저장 및 인증메일 비동기 전송
      */
     @PostMapping("/email-verifications")
+    @Operation(summary = "이메일 인증메일 발송")
     public ResponseEntity<ApiCommonResDto<Void>> emailVerification(
             @Valid @RequestBody EmailVerificationReqDto reqDto
     ) {

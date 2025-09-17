@@ -24,12 +24,12 @@ public class WebSecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final String[] EXCLUDE_PATHS = {
-//            "/**",
-            "/api/v1/users/**",
-            "/api/v1/dev/**",                   // 개발 테스트용 API
-            "/api/v1/auth/login",               // 로그인
-            "/api/v1/auth/token/reissue"        // 토큰 재발급
+    private static final String[] EXCLUDE_PATHS = {
+            "/api-docs/**", "/swagger-ui/**",   // swagger api
+            "/api/v1/dev/**",                   // dev api
+            "/api/v1/auth/login",               // login api
+            "/api/v1/auth/token/reissue",       // token reissue api
+            "/api/v1/users/**",                 // 개발중
     };
 
     @Bean

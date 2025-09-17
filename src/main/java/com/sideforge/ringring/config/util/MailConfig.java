@@ -1,4 +1,4 @@
-package com.sideforge.ringring.config;
+package com.sideforge.ringring.config.util;
 
 import com.sideforge.ringring.config.properties.MailProperties;
 import lombok.RequiredArgsConstructor;

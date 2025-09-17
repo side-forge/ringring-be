@@ -1,4 +1,4 @@
-package com.sideforge.ringring.config;
+package com.sideforge.ringring.config.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
