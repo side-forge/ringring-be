@@ -42,7 +42,7 @@ public enum RedisKey {
      * - 용도: 시도 횟수 초과 시 해당 이메일 계정에 대한 인증 요청 잠금
      * - args: email
      */
-    AUTH_CODE_EMAIL_LOCK("ringring:code:email:%s:lock", Duration.ofMinutes(10)),
+    AUTH_CODE_EMAIL_LOCK("ringring:auth:code:email:%s:lock", Duration.ofMinutes(10)),
 
     /**
      * ── Email Verification Verified Ticket ────────────────────────────────
